@@ -1,0 +1,98 @@
+syntax = "proto3";
+package gqueue;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/tianhongwu/gqueue/internal/proto";
+
+message TaksMessage {
+  string type = 1;
+
+  bytes payload = 2;
+
+  string id = 3;
+
+  string queue = 4;
+
+  int32 retry = 5;
+
+  int32 retried = 6;
+
+  string error_msg = 7;
+
+  int64 last_failed_at = 11;
+
+  int64 timeout = 8;
+
+  int64 deadline = 9;
+
+  string unique_key = 10;
+
+  string group_key = 14;
+
+  int64 retention = 12;
+
+  int64 completed_at = 13;
+}
+
+message ServerInfo {
+  // Host machine the server is running on.
+  string host = 1;
+
+  // PID of the server process.
+  int32 pid = 2;
+
+  // Unique identifier for this server.
+  string server_id = 3;
+
+  // Maximum number of concurrency this server will use.
+  int32 concurrency = 4;
+
+  // List of queue names with their priorities.
+  // The server will consume tasks from the queues and prioritize
+  // queues with higher priority numbers.
+  map<string, int32> queues = 5;
+
+  // If set, the server will always consume tasks from a queue with higher
+  // priority.
+  bool strict_priority = 6;
+
+  // Status indicates the status of the server.
+  string status = 7;
+
+  // Time this server was started.
+  google.protobuf.Timestamp start_time = 8;
+
+  // Number of workers currently processing tasks.
+  int32 active_worker_count = 9;
+};
+
+message WorkerInfo {
+  // Host matchine this worker is running on.
+  string host = 1;
+
+  // PID of the process in which this worker is running.
+  int32 pid = 2;
+
+  // ID of the server in which this worker is running.
+  string server_id = 3;
+
+  // ID of the task this worker is processing.
+  string task_id = 4;
+
+  // Type of the task this worker is processing.
+  string task_type = 5;
+
+  // Payload of the task this worker is processing.
+  bytes task_payload = 6;
+
+  // Name of the queue the task the worker is processing belongs.
+  string queue = 7;
+
+  // Time this worker started processing the task.
+  google.protobuf.Timestamp start_time = 8;
+
+  // Deadline by which the worker needs to complete processing
+  // the task. If worker exceeds the deadline, the task will fail.
+  google.protobuf.Timestamp deadline = 9;
+};
